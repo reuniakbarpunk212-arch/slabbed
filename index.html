@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SLABBED — Specimen Grading Laboratory</title>
+<meta name="description" content="SLABBED: 2,000 specimens inspected, graded and sealed on-chain. Free for Agent ID holders and verified X accounts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f7f8f9; --panel:#ffffff; --line:#d7dce1; --ink:#11161c; --ink2:#5a6572;
+    --blue:#0047ff; --red:#c8102e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:Archivo,Arial,sans-serif}
+  .mono{font-family:"IBM Plex Mono",monospace}
+  .wrap{max-width:1020px;margin:0 auto;padding:0 18px 60px}
+  /* letterhead */
+  .letterhead{border-bottom:3px solid var(--ink);padding:18px 0 10px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .letterhead .org{font-weight:900;letter-spacing:.14em;font-size:13px}
+  .letterhead .sub{font-size:11px;color:var(--ink2);letter-spacing:.08em;margin-top:3px}
+  .letterhead .cert{text-align:right;font-size:12px}
+  .barcode{height:34px;margin:14px 0 4px;background:repeating-linear-gradient(90deg,#11161c 0 2px,transparent 2px 5px,#11161c 5px 6px,transparent 6px 11px,#11161c 11px 14px,transparent 14px 17px,#11161c 17px 18px,transparent 18px 23px)}
+  .barcode-cap{font-size:10px;letter-spacing:.3em;color:var(--ink2)}
+  h1{font-size:64px;font-weight:900;letter-spacing:-.01em;margin:26px 0 4px}
+  h1 .reg{font-size:18px;vertical-align:super;font-weight:700}
+  .tagline{font-size:17px;max-width:640px;line-height:1.45;margin:0 0 6px}
+  .deadpan{color:var(--ink2);font-size:13.5px;max-width:640px;line-height:1.5}
+  /* specimen case */
+  .bench{display:grid;grid-template-columns:300px 1fr;gap:22px;margin-top:26px}
+  @media(max-width:760px){.bench{grid-template-columns:1fr} h1{font-size:44px}}
+  .case{background:var(--panel);border:2px solid var(--ink);padding:10px;box-shadow:6px 6px 0 #e3e8ec}
+  .case .label{border-bottom:2px solid var(--ink);padding:4px 2px 8px}
+  .case .label .nm{font-weight:900;font-size:15px;letter-spacing:.06em}
+  .case .label .gr{color:var(--blue);font-weight:900;font-size:22px;float:right}
+  .case .art{border:1px solid var(--line);margin-top:10px;background:#fbfcfd}
+  .case .foot{font-size:10.5px;color:var(--ink2);margin-top:8px;line-height:1.5}
+  .case .seal{display:inline-block;border:1.5px solid var(--red);color:var(--red);font-weight:700;font-size:10px;letter-spacing:.14em;padding:2px 7px;transform:rotate(-4deg);margin-top:6px}
+  /* throughput table */
+  .thru{background:var(--panel);border:1px solid var(--line)}
+  .thru h2,.panel h2{font-size:13px;letter-spacing:.18em;margin:0;padding:12px 16px;border-bottom:1px solid var(--line);font-weight:900}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  td,th{padding:10px 16px;border-bottom:1px solid var(--line);text-align:left}
+  tr:last-child td{border-bottom:none}
+  td.v{text-align:right;font-family:"IBM Plex Mono",monospace;font-weight:600}
+  /* desks */
+  .desks{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px}
+  @media(max-width:760px){.desks{grid-template-columns:1fr}}
+  .panel{background:var(--panel);border:1px solid var(--line);padding-bottom:16px}
+  .panel .body{padding:14px 16px 0}
+  .panel p{font-size:14px;line-height:1.55;margin:0 0 10px}
+  .panel .small{font-size:12.5px;color:var(--ink2)}
+  button{background:var(--ink);color:#fff;border:none;font-family:Archivo,sans-serif;font-weight:700;font-size:14px;padding:11px 18px;cursor:pointer;letter-spacing:.02em}
+  button.blue{background:var(--blue)}
+  button:disabled{opacity:.45;cursor:wait}
+  button.ghost{background:#fff;color:var(--ink);border:2px solid var(--ink)}
+  input[type=text],input[type=url],select{width:100%;padding:10px 12px;border:1px solid var(--line);font-family:"IBM Plex Mono",monospace;font-size:13px;background:#fbfcfd;margin:6px 0 10px}
+  select{width:auto}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  #statusLine{border:1px dashed var(--ink2);padding:10px 14px;font-family:"IBM Plex Mono",monospace;font-size:13px;margin-top:22px;background:#fff;min-height:20px}
+  .notes{margin-top:26px;background:var(--panel);border:1px solid var(--line);padding:6px 20px 14px}
+  .notes h2{font-size:13px;letter-spacing:.18em;border:none;padding:12px 0 4px}
+  .notes li{font-size:14px;line-height:1.6;margin-bottom:4px}
+  footer{margin-top:34px;border-top:3px solid var(--ink);padding-top:12px;font-size:12px;color:var(--ink2);line-height:1.7}
+  footer a{color:var(--blue)}
+  .stamp{color:var(--red);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="letterhead">
+    <div>
+      <div class="org">SPECIMEN GRADING LABORATORY</div>
+      <div class="sub">ON-CHAIN DIVISION · BNB SMART CHAIN · FORM LG-721 REV. 1</div>
+    </div>
+    <div class="cert mono">CERT Nº SLAB-2026-001<br>INSPECTOR: THE CONTRACT<br>APPEALS: NONE AVAILABLE</div>
+  </div>
+  <div class="barcode"></div>
+  <div class="barcode-cap">SPECIMEN INTAKE · DO NOT BEND · DO NOT REPRINT</div>
+
+  <h1>SLABBED<span class="reg">®</span></h1>
+  <p class="tagline">Every specimen inspected, graded, and sealed on-chain. Two thousand units. One production run. The lab does not do second printings.</p>
+  <p class="deadpan">Graded collectibles are the one corner of the NFT market still moving real volume, so we built the grading lab itself into the collectible. Your NFT is the slab: a sealed specimen with its certificate number minted on the front. All artwork is generated by the contract, per token, forever inspectable.</p>
+
+  <div class="row" style="margin-top:16px">
+    <button id="connectInjected" class="blue">Connect Wallet</button>
+    <button id="connectWc" class="ghost">WalletConnect</button>
+    <span class="mono" id="walletLine" style="font-size:13px">wallet: not connected</span>
+  </div>
+  <div id="statusLine">Laboratory open. Counters below are read live from the contract.</div>
+
+  <div class="bench">
+    <div class="case">
+      <div class="label"><span class="gr">10</span><div class="nm">SLABBED — SPECIMEN #0001</div><div class="mono" style="font-size:11px;color:var(--ink2)">CERT 0x…0001 · BSC · ERC-721</div></div>
+      <svg class="art" viewBox="0 0 260 200" width="100%" height="180" aria-label="Representative specimen art">
+        <rect x="0" y="0" width="260" height="200" fill="#eef3ff"/>
+        <rect x="55" y="35" width="150" height="130" fill="none" stroke="#0047ff" stroke-width="3"/>
+        <circle cx="130" cy="100" r="34" fill="#0047ff"/>
+        <rect x="118" y="52" width="24" height="96" fill="#11161c"/>
+        <circle cx="130" cy="100" r="10" fill="#ffffff"/>
+      </svg>
+      <div class="foot">REPRESENTATIVE RENDER. Actual art is generated on-chain from the token id — deterministic geometry, no rarity tiers, no attributes. A slab is a slab.</div>
+      <span class="seal">SEALED ON-CHAIN</span>
+    </div>
+
+    <div class="thru">
+      <h2>LAB THROUGHPUT — LIVE FROM THE CONTRACT</h2>
+      <table>
+        <tr><td>Specimens sealed</td><td class="v"><span id="stTotal">–</span> / <span id="stCap">2,000</span></td></tr>
+        <tr><td>Remaining in this run</td><td class="v" id="stLeft">–</td></tr>
+        <tr><td>Free — Agent ID submissions</td><td class="v" id="stAgent">–</td></tr>
+        <tr><td>Free — Verified X submissions</td><td class="v" id="stX">–</td></tr>
+        <tr><td>Paid orders</td><td class="v" id="stPaid">–</td></tr>
+        <tr><td>Referral specimens issued</td><td class="v" id="stRef">–</td></tr>
+        <tr><td>Standard order price</td><td class="v">0.001 BNB</td></tr>
+      </table>
+      <div style="padding:12px 16px;font-size:12.5px;color:var(--ink2);line-height:1.55">Counters refresh from BSC RPC. If they show dashes, the lab's microscope (your connection) is still focusing.</div>
+    </div>
+  </div>
+
+  <div class="desks">
+    <div class="panel">
+      <h2>SUBMIT FOR GRADING — FREE</h2>
+      <div class="body">
+        <p><b>Lane A — Agent ID.</b> Wallets holding a Binance Agent ID may submit one specimen free, while the Agent quota (600) lasts.</p>
+        <button id="claimAgentBtn" class="blue">Claim Free — Agent ID</button>
+        <p style="margin-top:18px"><b>Lane B — Verified X.</b> Wallets tied to a verified (blue-check) X account may submit one specimen free, while the X quota (300) lasts. Post publicly on X including this site's link and your personal code, then hand us the post:</p>
+        <p class="small">Your code = the <b>last 6 characters of your wallet address</b>: <span class="mono" id="xCode" style="font-size:14px;color:var(--ink)">connect wallet to see it</span></p>
+        <input type="url" id="tweetUrl" placeholder="https://x.com/yourhandle/status/…">
+        <button id="claimXBtn">Verify Post &amp; Claim Free</button>
+        <p class="small" style="margin-top:10px">Laboratory rules: the Agent lane is one free specimen per wallet; the X lane is one per wallet <i>and</i> one per X handle. The permit desk checks the post, the handle and the blue check before the contract moves.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>ORDER DESK — BUY A SLAB, 0.001 BNB</h2>
+      <div class="body">
+        <p>Standard orders are open to every wallet — no Agent ID, no X account, no queue. Maximum 10 specimens per order.</p>
+        <div class="row">
+          <label for="buyCount" style="font-size:14px">Specimens:</label>
+          <select id="buyCount">
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+          </select>
+          <span class="mono" id="buyTotal" style="font-size:14px">total: 0.001 BNB</span>
+        </div>
+        <button id="buyBtn" class="blue" style="margin-top:8px">Buy a Slab — 0.001 BNB</button>
+        <p class="small" style="margin-top:12px">Every order's full payment is forwarded to the treasury inside the same transaction. The contract retains zero BNB — the lab charges for grading, not for custody. If you arrived via a referral link, your referrer is credited automatically.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="desks">
+    <div class="panel">
+      <h2>REFERRAL LEDGER</h2>
+      <div class="body">
+        <p>Refer a paid order and the ledger credits you. Every <b>5 paid specimens</b> referred earns <b>1 bonus specimen</b>, minted free.</p>
+        <p class="small">Your referral link:</p>
+        <input type="text" id="refLink" readonly value="connect wallet to generate">
+        <table>
+          <tr><td>Paid specimens you referred</td><td class="v" id="refPaid">–</td></tr>
+          <tr><td>Bonus specimens pending</td><td class="v" id="refPending">–</td></tr>
+          <tr><td>Specimens in your wallet</td><td class="v" id="myBal">–</td></tr>
+        </table>
+        <button id="claimBonusBtn" style="margin-top:12px">Claim Referral Bonus</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>CERTIFICATE OF PARTICULARS</h2>
+      <div class="body">
+        <table>
+          <tr><td>Collection</td><td class="v">SLABBED (SLAB)</td></tr>
+          <tr><td>Production run</td><td class="v">2,000 — hard cap, no reprints</td></tr>
+          <tr><td>Contract (BSC)</td><td class="v" style="font-size:11px">0x9625391531E31Baf61ac9f3061a4Da38EB49684A</td></tr>
+          <tr><td>Free quotas</td><td class="v">600 Agent ID · 300 Verified X</td></tr>
+          <tr><td>Owner / admin keys</td><td class="v">none — the lab has no back door</td></tr>
+        </table>
+        <p style="margin-top:12px">Share this laboratory with another collector:</p>
+        <button id="shareBtn" class="ghost">Share on X</button>
+        <p class="small" style="margin-top:10px">The share text carries your referral link once your wallet is connected.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <h2>LABORATORY NOTES</h2>
+    <ul>
+      <li>Inspection is permanent: the contract is immutable, has no owner and no admin functions. Nobody can regrade your specimen, including us.</li>
+      <li>Art is generated on-chain from the token id. There are no hidden tiers and no prize traits; any grade talk is the lab's sense of humour, not a promise of value.</li>
+      <li>This is a collectible with no promised value. The lab stamps specimens; it does not stamp investment advice.</li>
+      <li>Agents: read <a href="skill.md">skill.md</a> — the submission procedure is written for you. Contract facts also live in <a href="llms.txt">llms.txt</a>.</li>
+    </ul>
+  </div>
+
+  <footer>
+    SLABBED · Specimen Grading Laboratory, On-Chain Division · Contract <span class="mono">0x9625391531E31Baf61ac9f3061a4Da38EB49684A</span> on BNB Smart Chain (chainId 56) · <a href="https://bscscan.com/address/0x9625391531E31Baf61ac9f3061a4Da38EB49684A">Inspect on BscScan</a><br>
+    Form LG-721 Rev. 1 — this document supersedes all previous documents. There were no previous documents. <span class="stamp">FILE UNDER: SEALED</span>
+  </footer>
+</div>
+
+<script>
+"use strict";
+var CONTRACT = "0x9625391531E31Baf61ac9f3061a4Da38EB49684A";
+var SITE_URL = "https://reuniakbarpunk212-arch.github.io/slabbed/";
+var PERMIT_URL = "https://permit-worker.reuniakbarpunk212.workers.dev/slab/permit";
+var RPC_URL = "https://bsc-dataseed.binance.org";
+var WC_PROJECT_ID = "ff5985647ed78916bed0155d2ff84a1c";
+var SEL = { status:"0x200d2ed2", claimAgent:"0x481a19e1", claimX:"0xb3b5b4fe", mint:"0x94bf804d", claimBonus:"0x1e375ab9", refPaid:"0xb851d7ea", refPending:"0x3bf1fc2d", balanceOf:"0x70a08231" };
+var ZERO = "0x0000000000000000000000000000000000000000";
+var eip = null, account = null, priceWei = 1000000000000000n;
+
+function $(id){ return document.getElementById(id); }
+function say(m){ var el = $("statusLine"); if (el) el.textContent = m; }
+function setText(id, v){ var el = $(id); if (el) el.textContent = String(v); }
+function padAddr(a){ return "000000000000000000000000" + String(a).replace(/^0x/i,"").toLowerCase(); }
+function padUint(n){ return BigInt(n).toString(16).padStart(64,"0"); }
+function isAddr(a){ return /^0x[0-9a-fA-F]{40}$/.test(a || ""); }
+function refFromUrl(){ try { var r = new URLSearchParams(location.search).get("ref"); return isAddr(r) ? r : ZERO; } catch(e){ return ZERO; } }
+function errText(e){ return (e && (e.shortMessage || e.message)) || String(e); }
+
+async function rpc(method, params){
+  var r = await fetch(RPC_URL, { method:"POST", headers:{ "content-type":"application/json" },
+    body: JSON.stringify({ jsonrpc:"2.0", id:1, method:method, params:params }) });
+  var j = await r.json();
+  if (j.error) throw new Error(j.error.message || "RPC error");
+  return j.result;
+}
+function words(hex){ var h = String(hex).replace(/^0x/,""); var out = []; for (var i=0;i+64<=h.length;i+=64) out.push(BigInt("0x" + h.slice(i,i+64))); return out; }
+
+async function refresh(){
+  try{
+    var w = words(await rpc("eth_call", [{ to:CONTRACT, data:SEL.status }, "latest"]));
+    // status(): 0 totalMinted 1 agentFreeUsed 2 xFreeUsed 3 paidSold 4 referralMinted 5 cap 6 priceWei 7 agentFreeCap 8 xFreeCap
+    priceWei = w[6];
+    setText("stTotal", w[0]); setText("stCap", w[5]); setText("stLeft", w[5] - w[0]);
+    setText("stAgent", w[1] + " / " + w[7]); setText("stX", w[2] + " / " + w[8]);
+    setText("stPaid", w[3]); setText("stRef", w[4]);
+    updateBuyTotal();
+    if (account){
+      var rp = words(await rpc("eth_call", [{ to:CONTRACT, data:SEL.refPaid + padAddr(account) }, "latest"]));
+      var pd = words(await rpc("eth_call", [{ to:CONTRACT, data:SEL.refPending + padAddr(account) }, "latest"]));
+      var bal = words(await rpc("eth_call", [{ to:CONTRACT, data:SEL.balanceOf + padAddr(account) }, "latest"]));
+      setText("refPaid", rp[0]); setText("refPending", pd[0]); setText("myBal", bal[0]);
+    }
+  }catch(e){ /* counters stay as-is on RPC hiccups */ }
+}
+function updateBuyTotal(){
+  var n = parseInt(($("buyCount") || {}).value || "1", 10) || 1;
+  var bnb = Number(priceWei * BigInt(n)) / 1e18;
+  setText("buyTotal", "total: " + bnb.toFixed(3) + " BNB");
+}
+
+/* ---- wallet connection ---- */
+function loadScript(url, timeoutMs){
+  return new Promise(function(resolve, reject){
+    var s = document.createElement("script");
+    var t = setTimeout(function(){ s.remove(); reject(new Error("timeout")); }, timeoutMs);
+    s.src = url; s.async = true;
+    s.onload = function(){ clearTimeout(t); resolve(); };
+    s.onerror = function(){ clearTimeout(t); s.remove(); reject(new Error("load failed")); };
+    document.body.appendChild(s);
+  });
+}
+var WC_URLS = [
+  "https://unpkg.com/@walletconnect/ethereum-provider@2.21.0/dist/index.umd.js",
+  "https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.21.0/dist/index.umd.js"
+];
+function wcCtor(){ var ns = window["@walletconnect/ethereum-provider"]; return (ns && ns.EthereumProvider) ? ns.EthereumProvider : null; }
+
+async function finishConnect(prov, label, accs){
+  if (!accs || !accs.length) throw new Error("No account returned by the wallet.");
+  eip = prov; account = accs[0];
+  setText("walletLine", "wallet: " + account + " (" + label + ")");
+  setText("xCode", account.slice(-6));
+  $("refLink").value = SITE_URL + "?ref=" + account;
+  $("connectInjected").textContent = "Connected";
+  say("Wallet connected: " + account + ". The lab is ready to receive your submission.");
+  await refresh();
+}
+async function connectInjected(){
+  try{
+    if (!window.ethereum) { say("No browser wallet found. Use WalletConnect, or open this page inside your wallet's browser."); return; }
+    say("Requesting account from your browser wallet…");
+    var accs = await window.ethereum.request({ method:"eth_requestAccounts" });
+    try { await window.ethereum.request({ method:"wallet_switchEthereumChain", params:[{ chainId:"0x38" }] }); } catch(e){}
+    await finishConnect(window.ethereum, "browser wallet", accs);
+  }catch(e){ say("Connection failed: " + errText(e)); }
+}
+async function connectWC(){
+  var btn = $("connectWc");
+  try{
+    btn.disabled = true; btn.textContent = "Loading WalletConnect…";
+    if (!wcCtor()){
+      var ok = false;
+      for (var i=0;i<WC_URLS.length && !ok;i++){ try { await loadScript(WC_URLS[i], 20000); ok = !!wcCtor(); } catch(e){} }
+      if (!ok) throw new Error("WalletConnect library could not be loaded — check your connection and try again.");
+    }
+    btn.textContent = "Opening WalletConnect…";
+    say("A WalletConnect window is opening — pick your wallet and approve there.");
+    var provider = await wcCtor().init({
+      projectId: WC_PROJECT_ID, chains: [56], showQrModal: true,
+      metadata: { name: "SLABBED", description: "Specimen Grading Laboratory — sealed on-chain collectibles on BSC", url: SITE_URL, icons: [] }
+    });
+    await provider.connect();
+    var accs = (provider.accounts && provider.accounts.length) ? provider.accounts : await provider.request({ method:"eth_accounts" });
+    await finishConnect(provider, "WalletConnect", accs);
+  }catch(e){ say("WalletConnect failed: " + errText(e)); }
+  btn.disabled = false; btn.textContent = "WalletConnect";
+}
+
+/* ---- transactions ---- */
+async function waitReceipt(hash){
+  for (var i=0;i<60;i++){
+    var rec = await rpc("eth_getTransactionReceipt", [hash]);
+    if (rec){ if (rec.status === "0x0") throw new Error("transaction reverted on-chain"); return; }
+    await new Promise(function(res){ setTimeout(res, 3000); });
+  }
+  throw new Error("transaction not confirmed after 3 minutes — check BscScan: " + hash);
+}
+async function sendTx(data, valueHex){
+  if (!eip || !account) throw new Error("Connect a wallet first.");
+  var tx = { from: account, to: CONTRACT, data: data };
+  if (valueHex && valueHex !== "0x0") tx.value = valueHex;
+  var hash = await eip.request({ method:"eth_sendTransaction", params:[tx] });
+  say("Transaction sent: " + hash + " — the lab is processing…");
+  await waitReceipt(hash);
+  return hash;
+}
+function encStr(s){
+  var b = new TextEncoder().encode(s), hex = "";
+  for (var i=0;i<b.length;i++) hex += b[i].toString(16).padStart(2,"0");
+  var tail = padUint(b.length) + hex;
+  while ((tail.length / 2) % 32 !== 0) tail += "00";
+  return tail;
+}
+function encBytes(hx){
+  var h = String(hx).replace(/^0x/,""), tail = padUint(h.length / 2) + h;
+  while ((tail.length / 2) % 32 !== 0) tail += "00";
+  return tail;
+}
+
+async function claimAgent(){
+  try{ say("Submitting your Agent ID claim…"); await sendTx(SEL.claimAgent); say("Specimen sealed. Your free Agent ID claim is confirmed on-chain."); await refresh(); }
+  catch(e){ say("Agent claim failed: " + errText(e)); }
+}
+async function claimX(){
+  try{
+    if (!account) throw new Error("Connect a wallet first.");
+    var url = ($("tweetUrl").value || "").trim();
+    if (!url) { say("Paste the link to your X post first — it must contain this site's link and your code " + account.slice(-6) + "."); return; }
+    say("Handing your post to the permit desk for verification…");
+    var r = await fetch(PERMIT_URL, { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ wallet: account, tweetUrl: url }) });
+    var j = {}; try { j = await r.json(); } catch(e){}
+    if (!r.ok || j.error) throw new Error("Permit refused: " + (j.error || ("HTTP " + r.status)));
+    var handle = j.handle, deadline = j.deadline, sig = j.signature || j.sig;
+    if (!handle || deadline === undefined || !sig) throw new Error("Permit reply was incomplete — please try again.");
+    var es = encStr(handle), eb = encBytes(sig);
+    var data = SEL.claimX + padUint(96) + padUint(deadline) + padUint(96 + es.length / 2) + es + eb;
+    say("Permit approved for @" + handle + ". Sealing your specimen…");
+    await sendTx(data);
+    say("Specimen sealed. Your verified-X free claim is confirmed on-chain.");
+    await refresh();
+  }catch(e){ say("Verified-X claim failed: " + errText(e)); }
+}
+async function buy(){
+  try{
+    var n = parseInt($("buyCount").value, 10) || 1;
+    var value = priceWei * BigInt(n);
+    say("Placing your order for " + n + " specimen(s) — " + (Number(value)/1e18).toFixed(3) + " BNB, forwarded in full to the treasury.");
+    await sendTx(SEL.mint + padUint(n) + padAddr(refFromUrl()), "0x" + value.toString(16));
+    say("Order complete. " + n + " specimen(s) sealed to your wallet.");
+    await refresh();
+  }catch(e){ say("Order failed: " + errText(e)); }
+}
+async function claimBonus(){
+  try{ say("Issuing your pending referral specimens…"); await sendTx(SEL.claimBonus); say("Referral bonus issued. Check your wallet balance in the ledger."); await refresh(); }
+  catch(e){ say("Bonus claim failed: " + errText(e)); }
+}
+function shareText(){
+  var ref = account ? account : ZERO;
+  return "SLABBED — every specimen inspected, graded and sealed on-chain.\n\nFree slabs for Agent ID holders and verified X accounts while the lab quota lasts.\n\nClaim yours:\n" + SITE_URL + "?ref=" + ref;
+}
+
+$("connectInjected").addEventListener("click", connectInjected);
+$("connectWc").addEventListener("click", connectWC);
+$("claimAgentBtn").addEventListener("click", claimAgent);
+$("claimXBtn").addEventListener("click", claimX);
+$("buyBtn").addEventListener("click", buy);
+$("claimBonusBtn").addEventListener("click", claimBonus);
+$("buyCount").addEventListener("change", updateBuyTotal);
+$("shareBtn").addEventListener("click", function(){ window.open("https://x.com/intent/tweet?text=" + encodeURIComponent(shareText()), "_blank"); });
+refresh();
+setInterval(refresh, 30000);
+</script>
+</body>
+</html>
